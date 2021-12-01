@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  service_a:
+    build: ./service_a
+    ports:
+      - 5000:5000
+  service_b:
+    build: ./service_b
+  datadog:
+    image: datadog/agent:latest
+    logging:
+      driver: none
+    environment:
+     - DD_API_KEY=${DD_API_KEY}
+     - DD_SITE=datadoghq.eu
+     - DD_LOGS_ENABLED=true
+     - DD_CONTAINER_EXCLUDE_LOGS='image:datadog/agent:latest'
+     - DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /proc/:/host/proc/:ro
+     - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
